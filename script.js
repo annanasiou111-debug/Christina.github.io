@@ -10,24 +10,20 @@ const firebaseConfig = {
   appId: "1:392226867008:web:7dfd74a8d05c325887dca5"
 };
 
-// =======================
-// Initialize Firebase
-// =======================
 firebase.initializeApp(firebaseConfig);
 
-// =======================
-// Services
-// =======================
 const db = firebase.firestore();
+const storage = firebase.storage();
 
 console.log("Firebase connected ✅");
 
 // =======================
-// Form submit (ADD WISH)
+// Form submit
 // =======================
 const form = document.getElementById("wishForm");
 const nameInput = document.getElementById("name");
 const messageInput = document.getElementById("message");
+const photosInput = document.getElementById("photos");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -35,14 +31,29 @@ form.addEventListener("submit", async (e) => {
   if (!nameInput.value || !messageInput.value) return;
 
   try {
+    const photoUrls = [];
+
+    // 📸 Upload photos
+    for (const file of photosInput.files) {
+      const photoRef = storage
+        .ref()
+        .child(`photos/${Date.now()}_${file.name}`);
+
+      await photoRef.put(file);
+      const url = await photoRef.getDownloadURL();
+      photoUrls.push(url);
+    }
+
+    // 💌 Save wish
     await db.collection("wishes").add({
       name: nameInput.value,
       message: messageInput.value,
+      photos: photoUrls,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    form.reset();
     alert("Η ευχή σας καταχωρήθηκε 💕");
+    form.reset();
   } catch (err) {
     console.error(err);
     alert("Κάτι πήγε λάθος 😢");
@@ -50,7 +61,7 @@ form.addEventListener("submit", async (e) => {
 });
 
 // =======================
-// SHOW WISHES (NO orderBy)
+// Show wishes + photos
 // =======================
 const wishList = document.getElementById("wishList");
 
@@ -63,9 +74,20 @@ db.collection("wishes").onSnapshot((snapshot) => {
     const div = document.createElement("div");
     div.className = "wish";
 
+    let photosHtml = "";
+    if (wish.photos && wish.photos.length > 0) {
+      photosHtml = wish.photos
+        .map(
+          (url) =>
+            `<img src="${url}" style="width:100%;border-radius:10px;margin-top:8px;">`
+        )
+        .join("");
+    }
+
     div.innerHTML = `
       <strong>${wish.name}</strong>
       <p>${wish.message}</p>
+      ${photosHtml}
     `;
 
     wishList.appendChild(div);
