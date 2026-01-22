@@ -5,17 +5,41 @@ const firebaseConfig = {
   apiKey: "AIzaSyB8wTurqBUONktr4f4JpUgiZb1f3SiaKys",
   authDomain: "christina-baptism.firebaseapp.com",
   projectId: "christina-baptism",
-  storageBucket: "christina-baptism.appspot.com",
   messagingSenderId: "392226867008",
   appId: "1:392226867008:web:7dfd74a8d05c325887dca5"
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 console.log("Firebase connected ✅");
+
+// =======================
+// Cloudinary upload
+// =======================
+async function uploadToCloudinary(file) {
+  const CLOUD_NAME = "dhuk7tuu7";        // 👈 άλλαξέ το
+  const UPLOAD_PRESET = "wishes_upload"; // 👈 άλλαξέ το
+
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if (!data.secure_url) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  return data.secure_url;
+}
 
 // =======================
 // Form
@@ -31,40 +55,28 @@ form.addEventListener("submit", async (e) => {
   if (!nameInput.value || !messageInput.value) return;
 
   try {
-    // 1️⃣ ΑΠΟΘΗΚΕΥΣΗ ΕΥΧΗΣ ΧΩΡΙΣ ΦΩΤΟ
-    const docRef = await db.collection("wishes").add({
-      name: nameInput.value,
-      message: messageInput.value,
-      photos: [],
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    // 2️⃣ ΑΝ ΥΠΑΡΧΟΥΝ ΦΩΤΟ → UPLOAD
     const photoUrls = [];
 
+    // 📸 Upload photos FIRST (Cloudinary)
     for (const file of photosInput.files) {
-      const photoRef = storage
-        .ref()
-        .child(`photos/${docRef.id}_${file.name}`);
-
-      await photoRef.put(file);
-      const url = await photoRef.getDownloadURL();
+      const url = await uploadToCloudinary(file);
       photoUrls.push(url);
     }
 
-    // 3️⃣ ΕΝΗΜΕΡΩΣΗ ΕΥΧΗΣ ΜΕ ΦΩΤΟ
-    if (photoUrls.length > 0) {
-      await docRef.update({
-        photos: photoUrls
-      });
-    }
+    // 💌 Save wish
+    await db.collection("wishes").add({
+      name: nameInput.value,
+      message: messageInput.value,
+      photos: photoUrls,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
     alert("Η ευχή καταχωρήθηκε 💕");
     form.reset();
 
   } catch (err) {
     console.error(err);
-    alert("Κάτι πήγε λάθος 😢");
+    alert("Σφάλμα με τη φωτο 😢");
   }
 });
 
@@ -89,7 +101,7 @@ db.collection("wishes")
         photosHtml = wish.photos
           .map(
             (url) =>
-              `<img src="${url}" style="width:100%;border-radius:10px;margin-top:8px;">`
+              `<img src="${url}" style="width:100%;border-radius:12px;margin-top:8px;">`
           )
           .join("");
       }
