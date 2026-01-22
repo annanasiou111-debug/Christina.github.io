@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <title>Χριστίνα 🎀</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="images/cover.jpg" alt="Χριστίνα">
+    <div class="hero-text">
+      <h1>Χριστίνα 🎀</h1>
+      <div class="rainbow-line"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <img src="images/g1.jpg">
+    <img src="images/g2.jpg">
+    <img src="images/g3.jpg">
+    <img src="images/g4.jpg">
+    <img src="images/g5.jpg">
+    <img src="images/g6.jpg">
+    <img src="images/g7.jpg">
+    <img src="images/g8.jpg">
+  </section>
+
+  <!-- WISHES -->
+  <section class="wishes">
+    <h2>Βιβλίο Ευχών 💌</h2>
+
+    <form id="wishForm">
+      <input type="text" id="name" placeholder="Όνομα" required>
+      <textarea id="message" placeholder="Γράψε την ευχή σου..." required></textarea>
+      <button type="submit">Στείλε ευχή</button>
+    </form>
+
+    <div id="wishList"></div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
