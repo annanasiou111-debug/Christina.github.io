@@ -41,3 +41,25 @@ form.addEventListener("submit", async (e) => {
     alert("Κάτι πήγε λάθος 😢");
   }
 });
+// Show wishes in real time
+const wishList = document.getElementById("wishList");
+
+db.collection("wishes")
+  .orderBy("createdAt", "desc")
+  .onSnapshot((snapshot) => {
+    wishList.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const wish = doc.data();
+
+      const div = document.createElement("div");
+      div.className = "wish";
+
+      div.innerHTML = `
+        <strong>${wish.name}</strong>
+        <p>${wish.message}</p>
+      `;
+
+      wishList.appendChild(div);
+    });
+  });
