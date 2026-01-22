@@ -1,4 +1,6 @@
+// =======================
 // Firebase config
+// =======================
 const firebaseConfig = {
   apiKey: "AIzaSyB8wTurqBUONktr4f4JpUgiZb1f3SiaKys",
   authDomain: "christina-baptism.firebaseapp.com",
@@ -8,58 +10,64 @@ const firebaseConfig = {
   appId: "1:392226867008:web:7dfd74a8d05c325887dca5"
 };
 
+// =======================
 // Initialize Firebase
+// =======================
 firebase.initializeApp(firebaseConfig);
 
+// =======================
 // Services
+// =======================
 const db = firebase.firestore();
-const storage = firebase.storage();
 
-// ---- TEST ----
 console.log("Firebase connected ✅");
-// Form submit
+
+// =======================
+// Form submit (ADD WISH)
+// =======================
 const form = document.getElementById("wishForm");
+const nameInput = document.getElementById("name");
+const messageInput = document.getElementById("message");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const message = document.getElementById("message").value;
+  if (!nameInput.value || !messageInput.value) return;
 
   try {
     await db.collection("wishes").add({
-      name: name,
-      message: message,
+      name: nameInput.value,
+      message: messageInput.value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    alert("Η ευχή σας καταχωρήθηκε 💕");
-
     form.reset();
-  } catch (error) {
-    console.error("Σφάλμα:", error);
+    alert("Η ευχή σας καταχωρήθηκε 💕");
+  } catch (err) {
+    console.error(err);
     alert("Κάτι πήγε λάθος 😢");
   }
 });
-// Show wishes in real time
+
+// =======================
+// SHOW WISHES (NO orderBy)
+// =======================
 const wishList = document.getElementById("wishList");
 
-db.collection("wishes")
-  .orderBy("createdAt", "desc")
-  .onSnapshot((snapshot) => {
-    wishList.innerHTML = "";
+db.collection("wishes").onSnapshot((snapshot) => {
+  wishList.innerHTML = "";
 
-    snapshot.forEach((doc) => {
-      const wish = doc.data();
+  snapshot.forEach((doc) => {
+    const wish = doc.data();
 
-      const div = document.createElement("div");
-      div.className = "wish";
+    const div = document.createElement("div");
+    div.className = "wish";
 
-      div.innerHTML = `
-        <strong>${wish.name}</strong>
-        <p>${wish.message}</p>
-      `;
+    div.innerHTML = `
+      <strong>${wish.name}</strong>
+      <p>${wish.message}</p>
+    `;
 
-      wishList.appendChild(div);
-    });
+    wishList.appendChild(div);
   });
+});
