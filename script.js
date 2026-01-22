@@ -53,6 +53,11 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!nameInput.value || !messageInput.value) return;
+    // ⛔ ΟΡΙΟ ΦΩΤΟ
+  if (photosInput.files.length >= 10) {
+    alert("Μέχρι 10 φωτογραφίες ανά ευχή 📸");
+    return;
+  }
 
   try {
     const photoUrls = [];
