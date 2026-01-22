@@ -18,7 +18,7 @@ const storage = firebase.storage();
 console.log("Firebase connected ✅");
 
 // =======================
-// Form submit
+// Form
 // =======================
 const form = document.getElementById("wishForm");
 const nameInput = document.getElementById("name");
@@ -31,29 +31,37 @@ form.addEventListener("submit", async (e) => {
   if (!nameInput.value || !messageInput.value) return;
 
   try {
+    // 1️⃣ ΑΠΟΘΗΚΕΥΣΗ ΕΥΧΗΣ ΧΩΡΙΣ ΦΩΤΟ
+    const docRef = await db.collection("wishes").add({
+      name: nameInput.value,
+      message: messageInput.value,
+      photos: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // 2️⃣ ΑΝ ΥΠΑΡΧΟΥΝ ΦΩΤΟ → UPLOAD
     const photoUrls = [];
 
-    // 📸 Upload photos
     for (const file of photosInput.files) {
       const photoRef = storage
         .ref()
-        .child(`photos/${Date.now()}_${file.name}`);
+        .child(`photos/${docRef.id}_${file.name}`);
 
       await photoRef.put(file);
       const url = await photoRef.getDownloadURL();
       photoUrls.push(url);
     }
 
-    // 💌 Save wish
-    await db.collection("wishes").add({
-      name: nameInput.value,
-      message: messageInput.value,
-      photos: photoUrls,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    // 3️⃣ ΕΝΗΜΕΡΩΣΗ ΕΥΧΗΣ ΜΕ ΦΩΤΟ
+    if (photoUrls.length > 0) {
+      await docRef.update({
+        photos: photoUrls
+      });
+    }
 
-    alert("Η ευχή σας καταχωρήθηκε 💕");
+    alert("Η ευχή καταχωρήθηκε 💕");
     form.reset();
+
   } catch (err) {
     console.error(err);
     alert("Κάτι πήγε λάθος 😢");
@@ -61,35 +69,37 @@ form.addEventListener("submit", async (e) => {
 });
 
 // =======================
-// Show wishes + photos
+// ΕΜΦΑΝΙΣΗ ΕΥΧΩΝ
 // =======================
 const wishList = document.getElementById("wishList");
 
-db.collection("wishes").onSnapshot((snapshot) => {
-  wishList.innerHTML = "";
+db.collection("wishes")
+  .orderBy("createdAt", "desc")
+  .onSnapshot((snapshot) => {
+    wishList.innerHTML = "";
 
-  snapshot.forEach((doc) => {
-    const wish = doc.data();
+    snapshot.forEach((doc) => {
+      const wish = doc.data();
 
-    const div = document.createElement("div");
-    div.className = "wish";
+      const div = document.createElement("div");
+      div.className = "wish";
 
-    let photosHtml = "";
-    if (wish.photos && wish.photos.length > 0) {
-      photosHtml = wish.photos
-        .map(
-          (url) =>
-            `<img src="${url}" style="width:100%;border-radius:10px;margin-top:8px;">`
-        )
-        .join("");
-    }
+      let photosHtml = "";
+      if (wish.photos && wish.photos.length > 0) {
+        photosHtml = wish.photos
+          .map(
+            (url) =>
+              `<img src="${url}" style="width:100%;border-radius:10px;margin-top:8px;">`
+          )
+          .join("");
+      }
 
-    div.innerHTML = `
-      <strong>${wish.name}</strong>
-      <p>${wish.message}</p>
-      ${photosHtml}
-    `;
+      div.innerHTML = `
+        <strong>${wish.name}</strong>
+        <p>${wish.message}</p>
+        ${photosHtml}
+      `;
 
-    wishList.appendChild(div);
+      wishList.appendChild(div);
+    });
   });
-});
