@@ -17,3 +17,27 @@ const storage = firebase.storage();
 
 // ---- TEST ----
 console.log("Firebase connected ✅");
+// Form submit
+const form = document.getElementById("wishForm");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const message = document.getElementById("message").value;
+
+  try {
+    await db.collection("wishes").add({
+      name: name,
+      message: message,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("Η ευχή σας καταχωρήθηκε 💕");
+
+    form.reset();
+  } catch (error) {
+    console.error("Σφάλμα:", error);
+    alert("Κάτι πήγε λάθος 😢");
+  }
+});
