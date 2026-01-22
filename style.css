@@ -10,23 +10,33 @@ body {
   color: #444;
 }
 
-/* HERO */
+/* =====================
+   HERO
+===================== */
 .hero {
   position: relative;
   text-align: center;
+  background: #dfe7d9;
 }
 
 .hero img {
   width: 100%;
-  max-height: 80vh;
-  object-fit: cover;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain; /* ΔΕΝ κόβει τη φωτο */
+  display: block;
+  margin: auto;
 }
 
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(120, 140, 120, 0.35);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.15),
+    rgba(0,0,0,0.35)
+  );
 }
 
 .hero-text {
@@ -36,18 +46,20 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
 .hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
+  font-size: 3.2rem;
   color: white;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.35);
 }
 
 .rainbow-line {
-  width: 120px;
+  width: 130px;
   height: 4px;
-  margin-top: 10px;
+  margin-top: 12px;
   background: linear-gradient(90deg,
     #f2c1cc,
     #f7e7b4,
@@ -58,49 +70,62 @@ body {
   border-radius: 10px;
 }
 
-/* GALLERY */
+/* =====================
+   GALLERY
+===================== */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  padding: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  padding: 40px 20px;
 }
 
 .gallery img {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 16px;
   cursor: pointer;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .gallery img:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* WISHES */
+/* =====================
+   WISHES
+===================== */
 .wishes {
   background: #f6f8f4;
-  padding: 50px 20px;
+  padding: 60px 20px;
   text-align: center;
 }
 
 .wishes h2 {
   font-family: 'Playfair Display', serif;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 2rem;
 }
 
 form {
-  max-width: 400px;
+  max-width: 420px;
   margin: auto;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  border-radius: 10px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 14px;
   border: 1px solid #ccc;
   font-family: inherit;
+  font-size: 0.95rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
 }
 
 button {
@@ -110,20 +135,47 @@ button {
     #cfe6d8
   );
   border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: 12px 24px;
+  border-radius: 24px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
 }
 
 #wishList {
-  margin-top: 30px;
+  margin-top: 35px;
 }
 
+/* ΚΑΡΤΕΛΑ ΕΥΧΗΣ */
 .wish {
   background: white;
-  padding: 15px;
+  padding: 18px;
+  border-radius: 18px;
+  margin: 14px auto;
+  max-width: 420px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.wish strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.wish p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.wish img {
+  width: 100%;
+  margin-top: 10px;
   border-radius: 14px;
-  margin: 10px auto;
-  max-width: 400px;
 }
