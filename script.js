@@ -18,8 +18,8 @@ console.log("Firebase connected ✅");
 // Cloudinary upload
 // =======================
 async function uploadToCloudinary(file) {
-  const CLOUD_NAME = "dhuk7tuu7";        // 👈 άλλαξέ το
-  const UPLOAD_PRESET = "wishes_upload"; // 👈 άλλαξέ το
+  const CLOUD_NAME = "dhuk7tuu7";
+  const UPLOAD_PRESET = "wishes_upload";
 
   const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
@@ -42,7 +42,7 @@ async function uploadToCloudinary(file) {
 }
 
 // =======================
-// Form
+// FORM
 // =======================
 const form = document.getElementById("wishForm");
 const nameInput = document.getElementById("name");
@@ -53,8 +53,9 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!nameInput.value || !messageInput.value) return;
-    // ⛔ ΟΡΙΟ ΦΩΤΟ
-  if (photosInput.files.length >= 10) {
+
+  // ⛔ ΟΡΙΟ ΦΩΤΟ
+  if (photosInput.files.length > 10) {
     alert("Μέχρι 10 φωτογραφίες ανά ευχή 📸");
     return;
   }
@@ -62,18 +63,18 @@ form.addEventListener("submit", async (e) => {
   try {
     const photoUrls = [];
 
-    // 📸 Upload photos FIRST (Cloudinary)
+    // 📸 Upload φωτο στο Cloudinary
     for (const file of photosInput.files) {
       const url = await uploadToCloudinary(file);
       photoUrls.push(url);
     }
 
-    // 💌 Save wish
+    // 💌 Αποθήκευση ευχής
     await db.collection("wishes").add({
       name: nameInput.value,
       message: messageInput.value,
       photos: photoUrls,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: firebase.firestore.Timestamp.now()
     });
 
     alert("Η ευχή καταχωρήθηκε 💕");
@@ -81,7 +82,7 @@ form.addEventListener("submit", async (e) => {
 
   } catch (err) {
     console.error(err);
-    alert("Σφάλμα με τη φωτο 😢");
+    alert("Κάτι πήγε στραβά με τις φωτο 😢");
   }
 });
 
@@ -104,10 +105,7 @@ db.collection("wishes")
       let photosHtml = "";
       if (wish.photos && wish.photos.length > 0) {
         photosHtml = wish.photos
-          .map(
-            (url) =>
-              `<img src="${url}" style="width:100%;border-radius:12px;margin-top:8px;">`
-          )
+          .map((url) => `<img src="${url}" class="wish-photo">`)
           .join("");
       }
 
