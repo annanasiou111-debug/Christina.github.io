@@ -16,51 +16,55 @@ body {
 .hero {
   position: relative;
   text-align: center;
-  background: #dfe7d9;
+  background: linear-gradient(
+    to bottom,
+    #dfe7d9,
+    #eef3ea
+  );
   overflow: hidden;
 }
 
 /* ΦΩΤΟ */
 .hero img {
   width: 100%;
-  max-height: 90vh;
+  max-height: 85vh;
   object-fit: contain;
   display: block;
   margin: auto;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
-/* ☁️ ΣΥΝΝΕΦΑ / WATERCOLOR */
+/* ☁️ ΣΥΝΝΕΦΑ */
 .hero::before,
 .hero::after {
   content: "";
   position: absolute;
-  top: -15%;
-  width: 35%;
-  height: 130%;
-  pointer-events: none;
+  top: -20%;
+  width: 40%;
+  height: 140%;
   z-index: 1;
-  filter: blur(30px);
+  filter: blur(35px);
+  opacity: 0.9;
 }
 
 .hero::before {
-  left: -12%;
+  left: -15%;
   background:
-    radial-gradient(circle at 30% 20%, rgba(242,193,204,0.45), transparent 65%),
-    radial-gradient(circle at 40% 55%, rgba(247,231,180,0.35), transparent 70%),
-    radial-gradient(circle at 50% 85%, rgba(207,230,216,0.3), transparent 75%);
+    radial-gradient(circle at 30% 30%, #f2c1cc 0%, transparent 60%),
+    radial-gradient(circle at 40% 60%, #f7e7b4 0%, transparent 65%),
+    radial-gradient(circle at 50% 85%, #cfe6d8 0%, transparent 70%);
 }
 
 .hero::after {
-  right: -12%;
+  right: -15%;
   background:
-    radial-gradient(circle at 70% 20%, rgba(199,215,242,0.45), transparent 65%),
-    radial-gradient(circle at 60% 55%, rgba(227,199,242,0.35), transparent 70%),
-    radial-gradient(circle at 50% 85%, rgba(207,230,216,0.3), transparent 75%);
+    radial-gradient(circle at 70% 30%, #c7d7f2 0%, transparent 60%),
+    radial-gradient(circle at 60% 60%, #e3c7f2 0%, transparent 65%),
+    radial-gradient(circle at 50% 85%, #cfe6d8 0%, transparent 70%);
 }
 
-/* ΚΕΙΜΕΝΟ HERO */
+/* HERO TEXT */
 .hero-text {
   position: absolute;
   inset: 0;
@@ -68,7 +72,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
 }
 
@@ -76,7 +80,7 @@ body {
   font-family: 'Playfair Display', serif;
   font-size: 3.2rem;
   color: white;
-  text-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  text-shadow: 0 6px 20px rgba(0,0,0,0.45);
 }
 
 .rainbow-line {
@@ -106,13 +110,12 @@ body {
 .gallery img {
   width: 100%;
   border-radius: 18px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease;
 }
 
 .gallery img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  transform: scale(1.04);
 }
 
 /* =====================
@@ -140,16 +143,10 @@ input,
 textarea {
   width: 100%;
   margin-bottom: 16px;
-  padding: 13px;
+  padding: 14px;
   border-radius: 16px;
   border: 1px solid #ccc;
   font-family: inherit;
-  font-size: 0.95rem;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
 }
 
 button {
@@ -159,71 +156,51 @@ button {
     #cfe6d8
   );
   border: none;
-  padding: 13px 26px;
-  border-radius: 28px;
+  padding: 14px 28px;
+  border-radius: 30px;
   cursor: pointer;
   font-weight: 500;
-  font-size: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
 }
 
 /* =====================
-   ΛΙΣΤΑ ΕΥΧΩΝ
+   ΕΥΧΕΣ
 ===================== */
 #wishList {
   margin-top: 45px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
   align-items: center;
 }
 
-/* 💌 ΚΟΥΤΑΚΙ ΕΥΧΗΣ */
+/* 💌 ΚΑΡΤΑ ΕΥΧΗΣ */
 .wish {
-  background: white;
-  padding: 20px;
-  border-radius: 22px;
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 24px;
   max-width: 420px;
   width: 100%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  text-align: left;
-  animation: fadeIn 0.4s ease;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  border: 2px solid #eef2ea;
 }
 
 .wish strong {
   display: block;
-  margin-bottom: 8px;
   font-size: 1rem;
-  color: #555;
+  margin-bottom: 6px;
+  color: #666;
 }
 
 .wish p {
   font-size: 0.95rem;
-  line-height: 1.45;
-  color: #444;
+  line-height: 1.5;
 }
 
+/* ΦΩΤΟ ΣΤΗΝ ΕΥΧΗ */
 .wish img {
   width: 100%;
   margin-top: 12px;
   border-radius: 16px;
-}
-
-/* ΑΝΙΜΑΤΙΟΝ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* 📱 MOBILE */
