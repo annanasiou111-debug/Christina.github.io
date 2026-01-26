@@ -23,7 +23,7 @@ body {
   align-items: center;
 }
 
-/* ☁️ ΠΑΣΤΕΛ ΣΥΝΝΕΦΑ */
+/* ☁️ ΠΑΣΤΕΛ ΣΥΝΝΕΦΑ (Τώρα φαίνονται παντού!) */
 .hero::before,
 .hero::after {
   content: "";
@@ -93,7 +93,7 @@ body {
 }
 
 /* =====================
-   GALLERY (ΔΙΟΡΘΩΜΕΝΟ)
+   GALLERY
 ===================== */
 .gallery {
   display: grid;
@@ -104,8 +104,8 @@ body {
 
 .gallery img {
   width: 100%;
-  aspect-ratio: 1 / 1;  /* ✅ Τις κάνει όλες τετράγωνες */
-  object-fit: cover;    /* ✅ Κόβει όσο περισσεύει χωρίς να παραμορφώνει */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 18px;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -226,14 +226,9 @@ button:hover {
   }
 }
 
-/* 📱 MOBILE */
+/* 📱 MOBILE - Τροποποιημένο */
 @media (max-width: 768px) {
-  /* Αν θες να φαίνονται τα σύννεφα και στο κινητό,
-     σβήσε τις 3 γραμμές παρακάτω */
-  .hero::before,
-  .hero::after {
-    display: none;
-  }
+  /* Έχω σβήσει την εντολή που έκρυβε τα σύννεφα! */
 
   .hero h1 {
     font-size: 2.4rem;
